@@ -19,7 +19,13 @@ export async function handleLogin(request: Request, env: Env): Promise<Response>
         case 'login':
             if (request.method === 'GET') return renderLogin(request, env);
             if (request.method === 'POST') return submitLogin(request, env);
-            if (request.method === 'HEAD') return respond(true, HttpStatus.OK);
+            if (request.method === 'HEAD') {
+                // Probe used by the login page: 204 = fresh install (setup mode), 401 = password already set.
+                const storedHash = await getAdminPasswordHash(env);
+                return storedHash
+                    ? respond(false, HttpStatus.UNAUTHORIZED, 'Password is set.')
+                    : new Response(null, { status: 204 });
+            }
             return respond(false, HttpStatus.METHOD_NOT_ALLOWED, 'Method not allowed.');
 
         default:

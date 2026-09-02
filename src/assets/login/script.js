@@ -8,7 +8,9 @@
             password: 'Password',
             login: 'Sign in',
             login_failed: 'Wrong password. Try again.',
-            setup_sub: 'No password set yet — choose one now',
+            setup_sub: 'No password set yet — choose one to claim this panel',
+            setup_hint: 'This is your panel\'s secret address — bookmark it now.',
+            claim: 'Claim panel',
             setup_ok: 'Password saved — signing you in…',
             too_short: 'Password must be at least 4 characters.'
         },
@@ -17,7 +19,9 @@
             password: 'رمز عبور',
             login: 'ورود',
             login_failed: 'رمز اشتباه است. دوباره تلاش کنید.',
-            setup_sub: 'هنوز رمزی تنظیم نشده — الان یکی انتخاب کنید',
+            setup_sub: 'هنوز رمزی تنظیم نشده — برای تصاحب پنل یک رمز انتخاب کنید',
+            setup_hint: 'این آدرس مخفی پنل شماست — همین حالا نشان‌گذاری‌اش کنید.',
+            claim: 'تصاحب پنل',
             setup_ok: 'رمز ذخیره شد — در حال ورود…',
             too_short: 'رمز باید حداقل ۴ کاراکتر باشد.'
         }
@@ -61,13 +65,26 @@
 
     applyI18n();
 
-    /* Probe whether this is first-run (no password set yet). */
+    /* Probe whether this is first-run (no password set yet): 204 = setup mode. */
     fetch('./login', { method: 'HEAD' })
         .then(function (r) {
-            if (r.status === 204) { isSetup = true; }
-            else if (r.status === 401) { isSetup = false; }
+            if (r.status === 204) enableSetupMode();
         })
         .catch(function () { });
+
+    function enableSetupMode() {
+        isSetup = true;
+        document.title = 'EFV Setup';
+        var sub = document.querySelector('.login-sub');
+        if (sub) sub.textContent = t('setup_sub');
+        var btn = $('loginBtn');
+        if (btn) btn.textContent = t('claim');
+        var note = $('setupNote');
+        if (note) note.hidden = false;
+        var url = $('setupUrl');
+        if (url) url.textContent = location.origin + location.pathname;
+        $('pw').setAttribute('autocomplete', 'new-password');
+    }
 
     var form = $('loginForm');
     form.addEventListener('submit', function (e) {

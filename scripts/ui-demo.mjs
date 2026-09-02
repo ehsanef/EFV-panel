@@ -26,7 +26,10 @@ const server = createServer((req, res) => {
         res.end(body);
     };
 
-    if (url.pathname.endsWith('/login')) return send(200, LOGIN_HTML);
+    if (url.pathname.endsWith('/login')) {
+        if (req.method === 'HEAD') { res.writeHead(204); return res.end(); } // fresh-install probe
+        return send(200, LOGIN_HTML);
+    }
     if (url.pathname.endsWith('/panel')) return send(200, PANEL_HTML);
     if (url.pathname.endsWith('/panel/settings')) return send(200, JSON.stringify(SETTINGS), 'application/json');
     if (url.pathname.endsWith('/panel/update-settings')) {

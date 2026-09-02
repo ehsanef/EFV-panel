@@ -10,13 +10,35 @@
 
 </div>
 
-EFV Panel runs a VLESS + Trojan proxy directly on a Cloudflare Worker (free tier works),
-with a management panel, per-client subscription links and QR codes.
+EFV Panel runs a VLESS + Trojan proxy directly on a Cloudflare Worker (free tier works), with a management panel, per-client subscription links and QR codes.
 
-> **Lineage & license**: EFV Panel is a rework of [BPB-Worker-Panel](https://github.com/bia-pain-bache/BPB-Worker-Panel)
-> by [bia-pain-bache](https://github.com/bia-pain-bache) (GPL-3.0). The proxy/protocol core and
-> subscription generators are ported from BPB; the panel UI/UX, auth flow, and settings
-> handling are a fresh implementation. Both projects are GPL-3.0 — see [LICENSE](./LICENSE).
+> **Lineage & license**: EFV Panel is a rework of [BPB-Worker-Panel](https://github.com/bia-pain-bache/BPB-Worker-Panel) by [bia-pain-bache](https://github.com/bia-pain-bache) (GPL-3.0). The proxy/protocol core and subscription generators are ported from BPB; the panel UI/UX, auth flow, and settings handling are a fresh implementation. Both projects are GPL-3.0 — see [LICENSE](./LICENSE).
+
+## 🚀 Install (one click)
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ehsanef/EFV-panel)
+
+**Everything is automatic — you only log into your Cloudflare account:**
+
+1. Click the button → **Authorize Workers Deploy** on the Cloudflare page that opens
+2. Done — the button provisions the Worker + KV namespace, builds the project, and deploys it
+
+Then open your worker URL: `https://efv-panel.<your-subdomain>.workers.dev`
+
+On first visit you land on the **setup screen** — pick your admin password and the panel shows your **secret path** (`https://…/<random>/login`). Bookmark it: that's your permanent login URL.
+
+- No CLI, no `npm install`, no `wrangler`, no config editing, no KV id pasting
+- Optional: the deploy form offers `UUID` / `TR_PASS` fields if you want fixed credentials (leave empty = auto-generated)
+
+## ⚙️ Manual deploy (CLI)
+
+```bash
+git clone https://github.com/ehsanef/EFV-panel
+cd EFV-panel
+npx wrangler deploy   # uses the committed dist/worker.js; KV auto-provisions (wrangler v4+)
+```
+
+Building from source instead: `npm install && npm run build` (requires Node 20+).
 
 ## ✨ Features
 
@@ -28,28 +50,12 @@ with a management panel, per-client subscription links and QR codes.
 - **QR codes** for every subscription link
 - **JWT auth** with first-run password setup; everything stored in Workers KV
 
-## 🚀 Deploy
-
-1. Install [Node.js](https://nodejs.org) 20+ and `npm install`
-2. `npm run build` → produces `dist/worker.js`
-3. Create a KV namespace: `wrangler kv namespace create kv`
-4. Edit `wrangler.toml` — set the KV `id`
-5. Deploy: `wrangler deploy` (or paste `dist/worker.js` in the Cloudflare dashboard)
-6. Bind your domain (workers route) to the worker
-
-**First run:** open `https://your-domain/<securePath>/login` — the panel prints your
-secure path in the worker logs; the first visit sets your admin password.
-
-> **Getting the secure path**: check `wrangler tail` output after deploy — the seeded
-> `embeddedSettings` (with `securePath`, VLESS UUID, Trojan password) is written to KV on
-> first request and logged.
-
 ## 🧪 Local development
 
 ```bash
 npm run check      # TypeScript typecheck
 npm run build      # build dist/worker.js
-npm test           # full smoke suite via Miniflare (19 checks)
+npm test           # full smoke suite via Miniflare
 npm run dev:ui     # panel UI with mocked API at http://localhost:58912/efvdemo/panel
 ```
 

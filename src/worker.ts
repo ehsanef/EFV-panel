@@ -16,7 +16,17 @@ export default {
                 return handleWebsocket(request);
             }
             await setSettings(env);
-            const { securePath, pathname } = getGlobals();
+            const { securePath, pathname, origin } = getGlobals();
+
+            /* First-run concierge: on a fresh install (no admin password claimed yet),
+               any visit to / redirects to the secret setup screen. Once the password
+               is claimed, / falls through to the normal 404/fallback — the secret
+               path stays secret. */
+            if (pathname === '/' && request.method === 'GET') {
+                const claimed = await env.kv.get('adminPasswordHash');
+                if (claimed === null) return Response.redirect(`${origin}/${securePath}/login`, 302);
+            }
+
             const path = pathname.split('/').splice(0, 3).join('/');
 
             switch (path) {

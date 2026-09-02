@@ -25,9 +25,12 @@ const check = (name, ok, detail = '') => {
 
 try {
     // First request triggers KV seeding (embeddedSettings gets a random securePath).
-    // Hit root to trigger fallback (404, no crash).
-    const fallbackRes = await mf.dispatchFetch(origin + '/');
-    check('fallback root → 404', fallbackRes.status === 404, `status ${fallbackRes.status}`);
+    // Fresh install → GET / must redirect to the secret setup URL (first-run concierge).
+    const rootRes = await mf.dispatchFetch(origin + '/', { redirect: 'manual' });
+    const rootLoc = rootRes.headers.get('Location') || '';
+    check('fresh install: GET / redirects to secret setup URL',
+        rootRes.status === 302 && /\/[a-z0-9]+\/login$/.test(rootLoc),
+        `status ${rootRes.status}, Location ${rootLoc}`);
 
     // Read the seeded securePath from KV
     const ns = await mf.getKVNamespace('kv');
@@ -35,11 +38,17 @@ try {
     check('embeddedSettings seeded', !!embedded.securePath, `securePath=${embedded.securePath}`);
     const sp = embedded.securePath;
     const base = `${origin}/${sp}`;
+    check('redirect matches seeded securePath', rootLoc === base + '/login', rootLoc);
 
     // Login page
     const loginPage = await mf.dispatchFetch(base + '/login');
     const loginHtml = await loginPage.text();
     check('GET /login → 200 HTML', loginPage.status === 200 && loginHtml.includes('EFV'), `${loginPage.status}, ${loginHtml.length} chars`);
+
+    // HEAD probe: 204 = fresh install (setup mode) — the login page uses this to show the
+    // "claim panel / bookmark this address" setup hint.
+    const probe = await mf.dispatchFetch(base + '/login', { method: 'HEAD' });
+    check('HEAD /login (fresh) → 204 setup mode', probe.status === 204, `status ${probe.status}`);
 
     // First-run: no password set yet → POST login sets password (setup mode)
     const setupRes = await mf.dispatchFetch(base + '/login', {
@@ -119,6 +128,14 @@ try {
     // Unauthenticated settings access → 401
     const unauth = await mf.dispatchFetch(base + '/panel/settings');
     check('GET /panel/settings unauth → 401', unauth.status === 401, `status ${unauth.status}`);
+
+    // After the password is claimed, the first-run concierge must CLOSE:
+    const rootAfter = await mf.dispatchFetch(origin + '/', { redirect: 'manual' });
+    check('after claim: GET / → 404 (concierge closed)',
+        rootAfter.status === 404, `status ${rootAfter.status}`);
+    const probeAfter = await mf.dispatchFetch(base + '/login', { method: 'HEAD' });
+    check('after claim: HEAD /login → 401 (password set)',
+        probeAfter.status === 401, `status ${probeAfter.status}`);
 
     const passCount = results.filter(r => r.ok).length;
     console.log(`\n${passCount}/${results.length} passed`);

@@ -7,6 +7,8 @@ compatibility_flags = ["nodejs_compat"]
 # UUID = ""       # optional: pre-seed VLESS UUID (auto-generated on first run if empty)
 # TR_PASS = ""    # optional: pre-seed Trojan password (auto-generated on first run if empty)
 
+# KV binding — auto-provisioned:
+#  • `wrangler deploy` (v4+): no `id` needed; the namespace is created & bound on first deploy
+#  • Deploy Button: Cloudflare rewrites the id in your clone during install
 [[kv_namespaces]]
 binding = "kv"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
