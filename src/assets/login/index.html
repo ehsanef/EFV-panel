@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>EFV Login</title>
+<style>/* CSS_PLACEHOLDER */</style>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="login-brand">
+            <span class="brand-mark">⚡</span>
+            <span class="brand-name">EFV<em>panel</em></span>
+        </div>
+        <p class="login-sub" data-i18n="login_sub">Sign in to your panel</p>
+
+        <div class="login-error" id="loginError" role="alert"></div>
+
+        <form id="loginForm" novalidate>
+            <div class="field">
+                <label for="pw" data-i18n="password">Password</label>
+                <input type="password" id="pw" name="password" autocomplete="current-password" required>
+            </div>
+            <button class="btn primary login-btn" type="submit" id="loginBtn" data-i18n="login">Sign in</button>
+        </form>
+
+        <p class="login-foot mono">EFV Panel · v<span id="verNum">__VERSION__</span></p>
+    </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>/* JS_PLACEHOLDER */</script>
+</body>
+</html>

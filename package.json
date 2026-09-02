@@ -1,0 +1,28 @@
+{
+	"name": "efv-panel",
+	"version": "1.0.0",
+	"homepage": "https://github.com/ehsanef/EFV-panel",
+	"license": "GPL-3.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"check": "tsc --noEmit",
+		"build": "node scripts/build.js",
+		"test": "node scripts/smoke.mjs",
+		"dev:ui": "node scripts/ui-demo.mjs"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20260603.1",
+		"@types/node": "^25.9.1",
+		"esbuild": "^0.28.0",
+		"glob": "^13.0.6",
+		"html-minifier": "^4.0.0",
+		"miniflare": "^4.20260730.0",
+		"terser": "^5.48.0",
+		"typescript": "^6.0.3"
+	},
+	"dependencies": {
+		"jose": "^6.2.3",
+		"qrcode-generator": "^2.0.4"
+	}
+}

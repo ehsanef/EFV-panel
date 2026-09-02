@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"lib": ["esnext"],
+		"types": ["@cloudflare/workers-types", "node"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"noEmit": true,
+		"skipLibCheck": true,
+		"allowJs": true,
+		"ignoreDeprecations": "6.0",
+		"baseUrl": ".",
+		"paths": {
+			"@settings": ["src/settings/settings.ts"],
+			"@settings/*": ["src/settings/*"],
+			"@handlers/*": ["src/handlers/*"],
+			"@cores/*": ["src/cores/*"],
+			"@xray/*": ["src/cores/xray/*"],
+			"@sing-box/*": ["src/cores/sing-box/*"],
+			"@clash/*": ["src/cores/clash/*"],
+			"@utils": ["src/cores/utils.ts"],
+			"@protocols/*": ["src/protocols/*"],
+			"@auth": ["src/auth/auth.ts"],
+			"@common": ["src/common/common.ts"],
+			"@kv": ["src/settings/kv.ts"],
+			"@main": ["src/settings/main.ts"],
+			"#types/*": ["src/types/*"]
+		}
+	},
+	"include": ["src/**/*", "scripts/build.js"]
+}

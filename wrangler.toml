@@ -1,0 +1,12 @@
+name = "efv-panel"
+main = "dist/worker.js"
+compatibility_date = "2026-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# UUID = ""       # optional: pre-seed VLESS UUID (auto-generated on first run if empty)
+# TR_PASS = ""    # optional: pre-seed Trojan password (auto-generated on first run if empty)
+
+[[kv_namespaces]]
+binding = "kv"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
