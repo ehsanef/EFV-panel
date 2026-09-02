@@ -12,8 +12,6 @@
 
 EFV Panel runs a VLESS + Trojan proxy directly on a Cloudflare Worker (free tier works), with a management panel, per-client subscription links and QR codes.
 
-> **Lineage & license**: EFV Panel is a rework of [BPB-Worker-Panel](https://github.com/bia-pain-bache/BPB-Worker-Panel) by [bia-pain-bache](https://github.com/bia-pain-bache) (GPL-3.0). The proxy/protocol core and subscription generators are ported from BPB; the panel UI/UX, auth flow, and settings handling are a fresh implementation. Both projects are GPL-3.0 — see [LICENSE](./LICENSE).
-
 ## 🚀 Install (one click)
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ehsanef/EFV-panel)
