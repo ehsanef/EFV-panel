@@ -74,4 +74,3 @@ src/
 ## ⚖️ License
 
 GPL-3.0 — see [LICENSE](./LICENSE).
-Portions © [BPB-Worker-Panel contributors](https://github.com/bia-pain-bache/BPB-Worker-Panel) (GPL-3.0).
